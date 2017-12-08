@@ -1,16 +1,15 @@
 package com.strangeone101.pkadvancements.database;
 
-import com.projectkorra.projectkorra.ProjectKorra;
-import com.strangeone101.pkadvancements.PKAdvancements;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Logger;
 
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.PreparedStatement;
-import java.util.logging.Logger;
+import com.strangeone101.pkadvancements.PKAdvancements;
 
 public abstract class Database {
 

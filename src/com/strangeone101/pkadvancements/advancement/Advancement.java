@@ -2,31 +2,27 @@ package com.strangeone101.pkadvancements.advancement;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.json.simple.JSONObject;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.projectkorra.projectkorra.util.ReflectionHandler;
 import com.strangeone101.pkadvancements.PKAdvancements;
-import com.strangeone101.pkadvancements.database.DBConnection;
 import com.strangeone101.pkadvancements.database.DBUtil;
 
 public class Advancement {
 	
 	private static List<Advancement> values = new ArrayList<Advancement>();
 	
-	private static final String FRAME_DEFAULT = "task";
-	private static final String FRAME_CHALLENGE = "challenge";
-	private static final String FRAME_GOAL = "goal";
+	public static final String FRAME_DEFAULT = "task";
+	public static final String FRAME_CHALLENGE = "challenge";
+	public static final String FRAME_GOAL = "goal";
 	
 	private static int GID = 0;
 	
@@ -38,6 +34,7 @@ public class Advancement {
 	private int criteria = 1;
 	private org.bukkit.advancement.Advancement vanillaAdvancement;
 	private boolean hidden = false;
+	private String frame = null;
 	
 	public Advancement(String id, String title, String description, ItemStack icon) {
 		this.id = id;
@@ -86,6 +83,11 @@ public class Advancement {
 	public Advancement setBackground(ItemStack background) {
 		this.background = "minecraft:textures/" + (background.getType().isBlock() ? "block" : "item") + 
 				"/" + background.getType().name() + ".png";
+		return this;
+	}
+	
+	public Advancement setFrame(String frame) {
+		this.frame = frame;
 		return this;
 	}
 	
@@ -148,6 +150,9 @@ public class Advancement {
         }
         display.put("hidden", hidden);
         display.put("frame", level.getFrame());
+        if (frame != null) {
+        	display.put("frame", frame);
+        }
         
         if (!level.canBroadcast()) {
         	display.put("can_broadcast", false);
@@ -248,8 +253,15 @@ public class Advancement {
 		
 		
 		if (advancement.criteria <= 1) {
-			player.getAdvancementProgress(advancement.getVanillaAdvancement()).awardCriteria((String) player.getAdvancementProgress(advancement.getVanillaAdvancement()).getRemainingCriteria().toArray()[0]);
+			awardPlayer(player, advancement);
+			//player.getAdvancementProgress(advancement.getVanillaAdvancement()).awardCriteria((String) player.getAdvancementProgress(advancement.getVanillaAdvancement()).getRemainingCriteria().toArray()[0]);
+			DBUtil.addAdvancementProgress(player, advancement);
 		} else {
+			if (DBUtil.getAdvancementProgress(player, advancement) + 1 >= advancement.criteria) {
+				awardPlayer(player, advancement);
+			} else {
+				DBUtil.addAdvancementProgress(player, advancement); //So it stops adding progress after it has been awarded
+			}
 			/*new BukkitRunnable() {
 				
 				@Override
@@ -267,7 +279,7 @@ public class Advancement {
 				}
 			}.runTaskAsynchronously(PKAdvancements.instance);*/
 		}
-		DBUtil.addAdvancementProgress(player, advancement);
+		
 	}
 
 

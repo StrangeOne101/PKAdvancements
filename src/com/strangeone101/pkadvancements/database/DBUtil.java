@@ -30,7 +30,7 @@ public class DBUtil {
 						DBConnection.sql.modifyQuery("INSERT INTO advancement_progress (UUID, PlayerName, `" + advancement.getDatabaseId() + "`) VALUES ('" + player.getUniqueId().toString() + "', '" + player.getName() + "', " + amount + ")");
 						
 					} else {
-						DBConnection.sql.modifyQuery("TABLE UPDATE SET `" + advancement.getDatabaseId() + "` = '" + amount + "', PlayerName = '" + player.getName() + "' WHERE UUID = '" + player.getUniqueId().toString() + "'", true);
+						DBConnection.sql.modifyQuery("UPDATE advancement_progress SET `" + advancement.getDatabaseId() + "` = '" + amount + "', PlayerName = '" + player.getName() + "' WHERE UUID = '" + player.getUniqueId().toString() + "'", true);
 					}
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
@@ -132,6 +132,64 @@ public class DBUtil {
 			 }
 		 }
 		 delta.clear();
+	}
+	
+	/**
+	 * Unloads a player's cache. If it is not forced, the
+	 * cache will be removed in a minute as long as the player
+	 * remains offline
+	 * @param uuid The UUID
+	 * @param force If it should be instant or not
+	 */
+	public static void unloadCache(UUID uuid, boolean force) {
+		if (force) {
+			cache.remove(uuid);
+			return;
+		} 
+		
+		new BukkitRunnable() {
+
+			@Override
+			public void run() {
+				if (Bukkit.getOfflinePlayer(uuid).isOnline()) return; //Don't unload if the player is still online
+				
+				cache.remove(uuid);
+			}
+			
+		}.runTaskLater(PKAdvancements.instance, 20 * 60); //1 min later
+	}
+	
+	/**
+	 * Loads the cache of a player from the DB
+	 * @param uuid The player UUID
+	 */
+	public static void loadCache(UUID uuid) {
+		if (cache.containsKey(uuid)) cache.remove(uuid); //Remove old cache if it's there
+		cache.put(uuid, new HashMap<Advancement, Integer>());
+		
+		ResultSet rs = DBConnection.sql.readQuery("SELECT * FROM advancement_progress WHERE UUID = '" + uuid.toString() + "'");
+	
+		try {
+			while (rs.next()) {
+				for (Advancement advancement : Advancement.getValues()) {
+					try {
+						rs.findColumn(advancement.getDatabaseId()); //This will throw an exception if it isn't found
+						cache.get(uuid).put(advancement, rs.getInt(advancement.getDatabaseId()));
+					} catch (SQLException e) {continue;}
+				}
+			} 
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Forcefully unloads all cache. Used on reloads/shutdown
+	 */
+	public static void unloadAllCache() {
+		for (UUID uuid : cache.keySet()) {
+			unloadCache(uuid, true);
+		}
 	}
 
 }

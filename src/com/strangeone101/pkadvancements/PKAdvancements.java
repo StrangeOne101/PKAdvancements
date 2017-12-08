@@ -1,22 +1,26 @@
 package com.strangeone101.pkadvancements;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
-import org.bukkit.UnsafeValues;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.strangeone101.pkadvancements.advancement.Advancement;
 import com.strangeone101.pkadvancements.advancement.AdvancementLevel;
 import com.strangeone101.pkadvancements.database.DBConnection;
+import com.strangeone101.pkadvancements.database.DBUtil;
+import com.strangeone101.pkadvancements.listeners.GenericListener;
+import com.strangeone101.pkadvancements.listeners.fire.BurnDiamonds;
+import com.strangeone101.pkadvancements.listeners.fire.FoodCook;
+import com.strangeone101.pkadvancements.listeners.fire.FurnaceLight;
+import com.strangeone101.pkadvancements.listeners.water.Fastswim1000;
+import com.strangeone101.pkadvancements.listeners.water.WaterBubble10;
 
 public class PKAdvancements extends JavaPlugin {
 	
@@ -33,9 +37,21 @@ public class PKAdvancements extends JavaPlugin {
 		
 		instance = this;
 		
+		//Register all advancements. Must be before all listeners.
 		Advancements.register();
 		
-		new AdvancementListener();
+		new AdvancementListener(); //Util listener. For the DB, etc
+		new GenericListener(); //Kills and generic listener
+		
+		//Fire
+		new BurnDiamonds();
+		new FurnaceLight();
+		new FoodCook();
+		
+		//Water
+		new Fastswim1000();
+		new WaterBubble10();
+		
 		
 		DBConnection.init();
 		
@@ -96,6 +112,12 @@ public class PKAdvancements extends JavaPlugin {
 		super.reloadConfig();
 		
 		reloaded = true;
+		
+		DBUtil.unloadAllCache();
+		
+		for (Player p : Bukkit.getOnlinePlayers()) {
+			DBUtil.loadCache(p.getUniqueId());
+		}
 	}
 
 }
