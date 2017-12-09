@@ -19,7 +19,9 @@ import com.strangeone101.pkadvancements.listeners.GenericListener;
 import com.strangeone101.pkadvancements.listeners.fire.BurnDiamonds;
 import com.strangeone101.pkadvancements.listeners.fire.FoodCook;
 import com.strangeone101.pkadvancements.listeners.fire.FurnaceLight;
+import com.strangeone101.pkadvancements.listeners.fire.NetherPortalIgnition;
 import com.strangeone101.pkadvancements.listeners.water.Fastswim1000;
+import com.strangeone101.pkadvancements.listeners.water.FullMoon;
 import com.strangeone101.pkadvancements.listeners.water.WaterBubble10;
 
 public class PKAdvancements extends JavaPlugin {
@@ -47,11 +49,12 @@ public class PKAdvancements extends JavaPlugin {
 		new BurnDiamonds();
 		new FurnaceLight();
 		new FoodCook();
+		new NetherPortalIgnition();
 		
 		//Water
 		new Fastswim1000();
 		new WaterBubble10();
-		
+		new FullMoon();
 		
 		DBConnection.init();
 		

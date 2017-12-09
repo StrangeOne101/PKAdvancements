@@ -29,9 +29,10 @@ public class DBConnection {
 			if (!sql.tableExists("advancement_progress")) {
 				PKAdvancements.instance.getLogger().info("No DB found, creating it.");
 				sql.getConnection().setAutoCommit(false);
-				String query = "CREATE TABLE `advancement_progress` (" + "PRIMARY KEY `UUID` TEXT(36) PRIMARY KEY, `PlayerName` TEXT(16));";
+				String query = "CREATE TABLE `advancement_progress` (" + "`UUID` TEXT(36) PRIMARY KEY, `PlayerName` TEXT(16));";
 				sql.modifyQuery(query, false);
-					
+				sql.getConnection().commit();
+				
 				for (Advancement advancement : Advancement.getValues()) {
 					sql.modifyQuery("ALTER TABLE `advancement_progress` ADD `" + advancement.getDatabaseId() + "` INTEGER DEFAULT '0';", false);
 				}

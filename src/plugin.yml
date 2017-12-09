@@ -1,6 +1,6 @@
 name: PKAdvancements
 main: com.strangeone101.pkadvancements.PKAdvancements
-version: 1.0 ALPHA
+version: 1.1 ALPHA
 prefix: PKAdvancements
 depend: [ProjectKorra]
 softdepend: [JedCore]

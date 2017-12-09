@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Wither;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -40,9 +41,9 @@ public class GenericListener extends AdvancementListenerBase {
 						}
 						if (bPlayer.getElements().contains(Element.FIRE) && !Advancement.playerHas(event.getPlayer(), Advancements.FIRE_CHOOSE)) {
 							Advancement.awardPlayer(event.getPlayer(), Advancements.FIRE_CHOOSE);
-						} else if (bPlayer.getElements().contains(Element.WATER) && !Advancement.playerHas(event.getPlayer(), Advancements.WATER_CHOOSE)) {
+						} if (bPlayer.getElements().contains(Element.WATER) && !Advancement.playerHas(event.getPlayer(), Advancements.WATER_CHOOSE)) {
 							Advancement.awardPlayer(event.getPlayer(), Advancements.WATER_CHOOSE);
-						} else if (bPlayer.getElements().contains(Element.EARTH) && !Advancement.playerHas(event.getPlayer(), Advancements.EARTH_CHOOSE)) {
+						} if (bPlayer.getElements().contains(Element.EARTH) && !Advancement.playerHas(event.getPlayer(), Advancements.EARTH_CHOOSE)) {
 							Advancement.awardPlayer(event.getPlayer(), Advancements.EARTH_CHOOSE);
 						}
 					}
@@ -89,8 +90,8 @@ public class GenericListener extends AdvancementListenerBase {
 			Advancement.addProgress(e.getAttacker(), Advancements.GENERIC_KILL_PLAYER_5);
 			Advancement.addProgress(e.getAttacker(), Advancements.GENERIC_KILL_PLAYER_6);
 			
-			if (e.getEntity().getUniqueId().toString().equals("") && !Advancement.playerHas(e.getAttacker(), Advancements.GENERIC_BEATDEV)) {
-				Advancement.awardPlayer(e.getAttacker(), Advancements.GENERIC_BEATDEV);
+			if (e.getEntity().getUniqueId().toString().equals("") && !Advancement.playerHas(e.getAttacker(), Advancements.GENERIC_KILL_DEV)) {
+				Advancement.awardPlayer(e.getAttacker(), Advancements.GENERIC_KILL_DEV);
 			}
 			
 			if (BendingPlayer.getBendingPlayer((Player)e.getEntity()) != null && BendingPlayer.getBendingPlayer((Player)e.getEntity()).getElements().size() >= 4 &&
@@ -109,13 +110,21 @@ public class GenericListener extends AdvancementListenerBase {
 				Advancement.addProgress(e.getAttacker(), Advancements.FIRE_KILL_PLAYER_4);
 				Advancement.addProgress(e.getAttacker(), Advancements.FIRE_KILL_PLAYER_5);
 				Advancement.addProgress(e.getAttacker(), Advancements.FIRE_KILL_PLAYER_6);
+				
+				if (e.getAbility() instanceof ComboAbility && !Advancement.playerHas(e.getAttacker(), Advancements.FIRE_COMBO_DEATH)) {
+					Advancement.awardPlayer(e.getAttacker(), Advancements.FIRE_COMBO_DEATH);
+				}
 			} else if (element == Element.WATER) {
 				Advancement.addProgress(e.getAttacker(), Advancements.WATER_KILL_PLAYER);
 				Advancement.addProgress(e.getAttacker(), Advancements.WATER_KILL_PLAYER_2);
 				Advancement.addProgress(e.getAttacker(), Advancements.WATER_KILL_PLAYER_3);
 				Advancement.addProgress(e.getAttacker(), Advancements.WATER_KILL_PLAYER_4);
 				Advancement.addProgress(e.getAttacker(), Advancements.WATER_KILL_PLAYER_5);
-				//Advancement.addProgress(e.getAttacker(), Advancements.WATER_KILL_PLAYER_6);
+				Advancement.addProgress(e.getAttacker(), Advancements.WATER_KILL_PLAYER_6);
+				
+				if (e.getAbility() instanceof ComboAbility && !Advancement.playerHas(e.getAttacker(), Advancements.WATER_COMBO_DEATH)) {
+					Advancement.awardPlayer(e.getAttacker(), Advancements.WATER_COMBO_DEATH);
+				}
 			} else if (element == Element.EARTH) {
 				Advancement.addProgress(e.getAttacker(), Advancements.EARTH_KILL_PLAYER);
 				Advancement.addProgress(e.getAttacker(), Advancements.EARTH_KILL_PLAYER_2);
@@ -123,6 +132,10 @@ public class GenericListener extends AdvancementListenerBase {
 				Advancement.addProgress(e.getAttacker(), Advancements.EARTH_KILL_PLAYER_4);
 				Advancement.addProgress(e.getAttacker(), Advancements.EARTH_KILL_PLAYER_5);
 				//Advancement.addProgress(e.getAttacker(), Advancements.EARTH_KILL_PLAYER_6);
+				
+				if (e.getAbility() instanceof ComboAbility && !Advancement.playerHas(e.getAttacker(), Advancements.EARTH_COMBO_DEATH)) {
+					Advancement.awardPlayer(e.getAttacker(), Advancements.EARTH_COMBO_DEATH);
+				}
 			} else if (element == Element.AIR) {
 				
 			} else if (element == Element.CHI) {
@@ -148,20 +161,26 @@ public class GenericListener extends AdvancementListenerBase {
 			Element element = event.getAbility().getElement();
 			if (element instanceof SubElement) {
 				element = ((SubElement)element).getParentElement();
-				
-				if (element == Element.WATER && !Advancement.playerHas(event.getAbility().getPlayer(), Advancements.WATER_COMBO)) {
-					Advancement.awardPlayer(event.getAbility().getPlayer(), Advancements.WATER_COMBO);
-				} else if (element == Element.FIRE && !Advancement.playerHas(event.getAbility().getPlayer(), Advancements.FIRE_COMBO)) {
-					Advancement.awardPlayer(event.getAbility().getPlayer(), Advancements.FIRE_COMBO);
-				} if (element == Element.EARTH && !Advancement.playerHas(event.getAbility().getPlayer(), Advancements.EARTH_COMBO)) {
-					Advancement.awardPlayer(event.getAbility().getPlayer(), Advancements.EARTH_COMBO);
-				} if (element == Element.AIR && !Advancement.playerHas(event.getAbility().getPlayer(), Advancements.WATER_COMBO)) {
-					//Advancement.awardPlayer(event.getAbility().getPlayer(), Advancements.AIR_COMBO);
-				} if (element == Element.CHI && !Advancement.playerHas(event.getAbility().getPlayer(), Advancements.WATER_COMBO)) {
-					//Advancement.awardPlayer(event.getAbility().getPlayer(), Advancements.CHI_COMBO);
-				}
 			}
 			
+			if (element == Element.WATER && !Advancement.playerHas(event.getAbility().getPlayer(), Advancements.WATER_COMBO)) {
+				Advancement.awardPlayer(event.getAbility().getPlayer(), Advancements.WATER_COMBO);
+			} else if (element == Element.FIRE && !Advancement.playerHas(event.getAbility().getPlayer(), Advancements.FIRE_COMBO)) {
+				Advancement.awardPlayer(event.getAbility().getPlayer(), Advancements.FIRE_COMBO);
+			} if (element == Element.EARTH && !Advancement.playerHas(event.getAbility().getPlayer(), Advancements.EARTH_COMBO)) {
+				Advancement.awardPlayer(event.getAbility().getPlayer(), Advancements.EARTH_COMBO);
+			} if (element == Element.AIR && !Advancement.playerHas(event.getAbility().getPlayer(), Advancements.WATER_COMBO)) {
+				//Advancement.awardPlayer(event.getAbility().getPlayer(), Advancements.AIR_COMBO);
+			} if (element == Element.CHI && !Advancement.playerHas(event.getAbility().getPlayer(), Advancements.WATER_COMBO)) {
+				//Advancement.awardPlayer(event.getAbility().getPlayer(), Advancements.CHI_COMBO);
+			}
 		}
 	}
+	
+	/*@EventHandler
+	public void onAdvancement(PlayerAdvancementDoneEvent event) {
+		if (event.getAdvancement().getKey().getNamespace().toLowerCase().startsWith("pkadvancements:")) {
+			
+		}
+	}*/
 }

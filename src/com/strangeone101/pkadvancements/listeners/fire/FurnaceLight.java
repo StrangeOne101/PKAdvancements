@@ -2,6 +2,7 @@ package com.strangeone101.pkadvancements.listeners.fire;
 
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.world.PortalCreateEvent;
 
 import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.event.AbilityEndEvent;
@@ -25,6 +26,11 @@ public class FurnaceLight extends AdvancementListenerBase {
 				Advancement.awardPlayer(event.getAbility().getPlayer(), getAdvancement());
 			}
 		}
+	}
+	
+	@EventHandler
+	public void onPortalLight(PortalCreateEvent event) {
+		//event.
 	}
 
 }

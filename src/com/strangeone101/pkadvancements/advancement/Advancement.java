@@ -227,7 +227,7 @@ public class Advancement {
 	 * Awards the provided player with the advancement. <b>Note</b>: If this
 	 * advancement has more than one criteria to fill, it will fill them all.
 	 * You might not want to use this for criteria that say, need a player
-	 * to have so many kills. Use <code>addProgress()</code> instead.
+	 * to have so many kills. Use {@link addProgress} instead.
 	 * 
 	 * @param player The player
 	 * @param advancement The advancement

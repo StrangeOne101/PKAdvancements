@@ -5,7 +5,6 @@ import org.bukkit.event.EventHandler;
 import com.projectkorra.projectkorra.ability.CoreAbility;
 import com.projectkorra.projectkorra.event.AbilityProgressEvent;
 import com.projectkorra.projectkorra.waterbending.WaterBubble;
-import com.projectkorra.projectkorra.waterbending.passive.FastSwim;
 import com.strangeone101.pkadvancements.AdvancementListenerBase;
 import com.strangeone101.pkadvancements.Advancements;
 import com.strangeone101.pkadvancements.advancement.Advancement;
